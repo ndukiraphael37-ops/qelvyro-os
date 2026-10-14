@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111827">
+<title>QELVYRO OS — Independent Prototype</title>
+<style>
+:root{--bg:#0b1020;--panel:#131b2f;--panel2:#19243b;--line:#2a3651;--text:#edf2ff;--muted:#9eacc7;--accent:#9fe870;--accent2:#6bd4c8;--warn:#ffd27d;--radius:16px}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 10% 0%,#1c2b48 0%,var(--bg) 50%);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+.app{min-height:100vh;display:grid;grid-template-columns:250px minmax(0,1fr)}
+.sidebar{border-right:1px solid var(--line);padding:22px 16px;background:#0a1020d9;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;margin:0 8px 24px}.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#0b1020;font-weight:900}
+.brand strong{display:block;letter-spacing:.12em;font-size:14px}.brand small{color:var(--muted);font-size:11px}
+.navlabel{color:#6f80a4;text-transform:uppercase;font-size:10px;letter-spacing:.16em;padding:12px 10px 6px}
+.nav button{display:flex;gap:10px;align-items:center;width:100%;border:0;background:transparent;color:#bdc8df;text-align:left;padding:10px;border-radius:10px;margin:2px 0}
+.nav button:hover,.nav button.active{background:var(--panel2);color:var(--text)}.nav button.active{box-shadow:inset 3px 0 var(--accent)}
+.sidefoot{margin-top:28px;padding:12px;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:12px}
+main{padding:26px;max-width:1400px;width:100%;margin:auto}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:24px;flex-wrap:wrap}
+.eyebrow{color:var(--accent);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:800}
+h1{font-size:clamp(26px,4vw,38px);line-height:1.12;margin:6px 0}h2{font-size:19px;margin:0 0 12px}h3{font-size:15px;margin:0 0 5px}
+p{margin:5px 0;color:var(--muted)}.status{border:1px solid #4c603f;color:var(--accent);padding:6px 10px;border-radius:999px;font-size:12px;white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:15px}.card{background:linear-gradient(145deg,#17223aee,#111a2cee);border:1px solid var(--line);border-radius:var(--radius);padding:18px;min-width:0}
+.span12{grid-column:span 12}.span8{grid-column:span 8}.span6{grid-column:span 6}.span4{grid-column:span 4}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:15px}.stat{padding:14px;border:1px solid var(--line);background:#10192b;border-radius:14px}.stat b{font-size:23px;display:block}.stat span{font-size:12px;color:var(--muted)}
+.commandrow{display:flex;gap:9px;margin-top:14px}.commandrow input{flex:1;min-width:0}.field,input,textarea,select{width:100%;background:#0c1425;border:1px solid #34415d;color:var(--text);border-radius:10px;padding:11px 12px;outline:none}.field:focus,input:focus,textarea:focus{border-color:var(--accent2)}
+.btn{border:1px solid var(--line);background:#24314b;color:var(--text);padding:10px 14px;border-radius:10px;font-weight:700}.btn.primary{background:var(--accent);color:#101a10;border-color:var(--accent)}.btn.ghost{background:transparent}.btn.small{padding:6px 9px;font-size:12px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.muted{color:var(--muted)}.pill{display:inline-flex;padding:3px 8px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:11px;margin:2px 3px 2px 0}.pill.green{color:var(--accent);border-color:#4c603f}.list{display:grid;gap:9px}.item{padding:12px;border:1px solid var(--line);border-radius:12px;background:#0e1729}.itemhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.item small{color:var(--muted)}.modulegrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.module{padding:14px;border:1px solid var(--line);border-radius:12px;background:#101a2d}.module .ico{font-size:22px;margin-bottom:7px}.module p{font-size:12px}.notice{border-left:3px solid var(--warn);padding:10px 12px;background:#2b2418;border-radius:0 10px 10px 0;color:#f6e5c4;font-size:13px}
+.section{display:none}.section.active{display:block}.empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
+footer{padding:20px 2px;color:#7483a1;font-size:11px}
+.mobilehead{display:none}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:950px){.app{grid-template-columns:1fr}.sidebar{position:static;height:auto;padding:12px;border-right:0;border-bottom:1px solid var(--line)}.brand{margin-bottom:8px}.nav{display:flex;overflow-x:auto;gap:4px}.navlabel,.sidefoot{display:none}.nav button{white-space:nowrap;width:auto;font-size:12px}.nav button span:first-child{display:none}main{padding:18px}.span8,.span6,.span4{grid-column:span 12}.modulegrid{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){main{padding:13px}.card{padding:14px}.modulegrid{grid-template-columns:1fr}.commandrow{flex-direction:column}.two{grid-template-columns:1fr}.topbar{align-items:flex-start}.status{white-space:normal}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="logo">Q</div><div><strong>QELVYRO OS</strong><small>INDEPENDENT FOUNDATION</small></div></div>
+  <div class="navlabel">Workspace</div>
+  <nav class="nav" id="nav">
+    <button class="active" data-view="overview"><span>◈</span> <span>Overview</span></button>
+    <button data-view="command"><span>⌘</span> <span>Command Centre</span></button>
+    <button data-view="modules"><span>▦</span> <span>Module Registry</span></button>
+    <button data-view="projects"><span>▣</span> <span>Projects</span></button>
+    <button data-view="assets"><span>▧</span> <span>Assets</span></button>
+    <button data-view="settings"><span>⚙</span> <span>Settings & Data</span></button>
+  </nav>
+  <div class="sidefoot"><b style="color:var(--text)">Prototype mode</b><br>Local-only data. No AI provider is connected. Generated actions are simulations.</div>
+</aside>
+<main>
+  <header class="topbar">
+    <div><div class="eyebrow">Master Control • Prototype</div><h1 id="pageTitle">Your control centre.</h1><p id="pageSub">One interface for the QELVYRO ecosystem.</p></div>
+    <div class="status">● Independent prototype · v0.3</div>
+  </header>
+
+  <section class="section active" id="view-overview">
+    <div class="stats">
+      <div class="stat"><b id="statModules">12</b><span>Registered capabilities</span></div>
+      <div class="stat"><b id="statProjects">0</b><span>Local projects</span></div>
+      <div class="stat"><b id="statAssets">0</b><span>Asset records</span></div>
+      <div class="stat"><b id="statJobs">0</b><span>Simulated jobs</span></div>
+    </div>
+    <div class="grid">
+      <div class="card span8">
+        <div class="eyebrow">Natural-language interface</div><h2>What should QELVYRO work on?</h2>
+        <p>Enter a command to route it through the prototype. Nothing here calls an external AI service.</p>
+        <div class="commandrow"><input id="quickCommand" placeholder="e.g. Qelvyro, create the complete video."/><button class="btn primary" id="runQuick">Run</button></div>
+        <div class="actions">
+          <button class="btn ghost small preset" data-cmd="Qelvyro, create the image.">Create image</button>
+          <button class="btn ghost small preset" data-cmd="Qelvyro, animate this image.">Animate image</button>
+          <button class="btn ghost small preset" data-cmd="Qelvyro, create the complete video.">Complete video</button>
+        </div>
+      </div>
+      <div class="card span4"><h2>System status</h2>
+        <div class="item"><div class="itemhead"><b>Master Control</b><span class="pill green">Prototype</span></div><small>Command routing is local.</small></div>
+        <div class="item" style="margin-top:8px"><div class="itemhead"><b>AI providers</b><span class="pill">Not connected</span></div><small>Live generation requires secure provider integration.</small></div>
+        <div class="item" style="margin-top:8px"><div class="itemhead"><b>Cloud sync</b><span class="pill">Not configured</span></div><small>Records remain in this browser.</small></div>
+      </div>
+      <div class="card span6"><h2>Recent activity</h2><div id="recentActivity" class="list"><div class="empty">No activity yet. Run a command to start.</div></div></div>
+      <div class="card span6"><h2>Next milestone</h2><div class="item"><b>Connect one real workflow</b><p>After verifying this foundation, add secure backend storage and one image/video provider.</p></div><div class="notice" style="margin-top:12px">Never paste API keys into this prototype or browser code.</div></div>
+    </div>
+  </section>
+
+  <section class="section" id="view-command">
+    <div class="card"><div class="eyebrow">Master Control</div><h2>Command Centre</h2><p>Choose a supported workflow. Prototype runs create a job record and plan, not a real image or video.</p>
+      <textarea id="mainCommand" rows="3" placeholder="Qelvyro, create the complete video."></textarea>
+      <div class="actions"><button class="btn primary" id="runMain">Interpret command</button><button class="btn ghost" id="clearCommand">Clear</button></div>
+      <div id="commandResult" style="margin-top:14px"></div>
+    </div>
+    <div class="card" style="margin-top:15px"><h2>Command patterns</h2><div class="list">
+      <div class="item"><b>Qelvyro, create the image.</b><p>Drafts an image brief and reference checklist.</p></div>
+      <div class="item"><b>Qelvyro, animate this image.</b><p>Drafts an image-to-video plan; requires a source image for real generation.</p></div>
+      <div class="item"><b>Qelvyro, create the complete video.</b><p>Drafts a multi-shot production plan, QA gates and delivery checklist.</p></div>
+      <div class="item"><b>Qelvyro, create a project called [name].</b><p>Creates a locally saved project record.</p></div>
+    </div></div>
+  </section>
+
+  <section class="section" id="view-modules">
+    <div class="card"><div class="eyebrow">Registry</div><h2>Module & capability registry</h2><p>These are ecosystem records, not claims that each module is technically deployed.</p>
+      <input id="moduleSearch" placeholder="Search modules…" style="margin:12px 0"/>
+      <div id="moduleGrid" class="modulegrid"></div>
+    </div>
+  </section>
+
+  <section class="section" id="view-projects">
+    <div class="card"><div class="eyebrow">Workspace</div><h2>Projects</h2><p>Create a local project record to track your next QELVYRO build or media production.</p>
+      <div class="two" style="margin:12px 0"><input id="projectName" placeholder="Project name"/><select id="projectType"><option>AI video production</option><option>Software development</option><option>Business campaign</option><option>Learning program</option><option>Other</option></select></div>
+      <textarea id="projectNotes" rows="2" placeholder="Goal or notes (optional)"></textarea><div class="actions"><button class="btn primary" id="addProject">Create project</button></div>
+      <div id="projectList" class="list" style="margin-top:15px"></div>
+    </div>
+  </section>
+
+  <section class="section" id="view-assets">
+    <div class="card"><div class="eyebrow">Asset management</div><h2>Asset records</h2><p>Register references and files by name. This prototype stores metadata only; it does not upload file bytes to a server.</p>
+      <div class="two" style="margin:12px 0"><input id="assetName" placeholder="Asset name"/><select id="assetType"><option>Character reference</option><option>Product image</option><option>Video clip</option><option>Audio</option><option>Prompt</option><option>Other</option></select></div>
+      <input id="assetLocation" placeholder="Optional local file name or notes"/><div class="actions"><button class="btn primary" id="addAsset">Register asset</button></div>
+      <div id="assetList" class="list" style="margin-top:15px"></div>
+    </div>
+  </section>
+
+  <section class="section" id="view-settings">
+    <div class="grid">
+      <div class="card span6"><div class="eyebrow">Local data</div><h2>Export / import</h2><p>Export your browser-stored project, asset and job records to a JSON file. Keep backups when changing devices.</p><div class="actions"><button class="btn primary" id="exportData">Export JSON backup</button><label class="btn ghost" for="importFile">Import JSON backup</label><input id="importFile" type="file" accept=".json,application/json" hidden/></div><div id="dataMsg" class="muted" style="margin-top:10px"></div></div>
+      <div class="card span6"><div class="eyebrow">Configuration</div><h2>Runtime settings</h2><div class="item"><b>Storage</b><p>Browser localStorage on this device and browser.</p></div><div class="item" style="margin-top:8px"><b>Generation mode</b><p>Simulation only. No real AI provider credentials or API calls.</p></div><div class="item" style="margin-top:8px"><b>Deployment</b><p>Not deployed as a hosted service.</p></div></div>
+      <div class="card span12"><h2>Reset local data</h2><p>This clears local QELVYRO records in this browser only. Export a backup first if needed.</p><button class="btn" id="resetData">Reset prototype data</button></div>
+    </div>
+  </section>
+  <footer>QELVYRO OS Independent Foundation v0.3 · Portable static prototype · Not a production AI service.</footer>
+</main>
+</div>
+<script>
+const KEY="qelvyro_os_independent_v03";
+const modules=[
+ {name:"Master Control & Orchestrator",icon:"🧠",desc:"Routes commands and coordinates specialist capabilities.",status:"Core"},
+ {name:"Unified AI Human & Cinematic Production Engine v2.0",icon:"🎬",desc:"Unified image, avatar, realism, multi-shot video, audio, QA and delivery workflow.",status:"Planned integration"},
+ {name:"AI Influencer & Digital Twin Engine",icon:"👤",desc:"Character identity, reference assets, voice and continuity profiles.",status:"Existing ecosystem capability"},
+ {name:"Human Realism Standard v1.0",icon:"✨",desc:"Natural skin texture, lighting, anatomy and identity checks.",status:"Existing standard"},
+ {name:"Cinematic Multi-Shot & Transition Engine",icon:"🎥",desc:"Shot planning, camera movement, continuity and transitions.",status:"Internal capability"},
+ {name:"UGC Master & Product → UGC Factory",icon:"🛍️",desc:"Product demonstrations, creator scripts and advertising workflows.",status:"Internal capability"},
+ {name:"Product Interaction & Fashion Transformation",icon:"👗",desc:"Product handling, garment continuity and transformation scenes.",status:"Internal capability"},
+ {name:"Viral Visual Story & Sound Studio",icon:"🔊",desc:"Story structure, voice, sound effects and timing plans.",status:"Internal capability"},
+ {name:"AI Content Factory",icon:"🏭",desc:"End-to-end content planning, production and repurposing.",status:"Existing ecosystem capability"},
+ {name:"Viral Content Intelligence",icon:"📈",desc:"Quality review, performance insights and future optimization.",status:"Internal capability"},
+ {name:"AI Automation Master",icon:"⚙️",desc:"Workflow automation and tool orchestration.",status:"Existing learning/module plan"},
+ {name:"Data Analysis & Intelligence Master",icon:"📊",desc:"Data preparation, reporting, analytics and dashboards.",status:"Existing learning/module plan"}
+];
+const titles={overview:["Your control centre.","One interface for the QELVYRO ecosystem."],command:["Command Centre","Issue a command and review the interpreted plan."],modules:["Module Registry","A consolidated map of QELVYRO capabilities."],projects:["Projects","Track work locally in this browser."],assets:["Assets","Register reference assets and their intended roles."],settings:["Settings & Data","Export or import local prototype records."]};
+let state=load();
+function fresh(){return {projects:[],assets:[],jobs:[],activity:[]}}
+function load(){try{return {...fresh(),...JSON.parse(localStorage.getItem(KEY)||"{}")}}catch(e){return fresh()}}
+function save(){localStorage.setItem(KEY,JSON.stringify(state));renderAll()}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function id(){return "q-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7)}
+function go(view){document.querySelectorAll(".section").forEach(x=>x.classList.toggle("active",x.id==="view-"+view));document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("active",x.dataset.view===view));document.getElementById("pageTitle").textContent=titles[view][0];document.getElementById("pageSub").textContent=titles[view][1];}
+document.querySelectorAll("#nav button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.view)));
+function interpret(raw){
+ const cmd=raw.trim(); if(!cmd) return {kind:"empty",title:"Enter a command",steps:["Describe the image, video, project or task you want QELVYRO to prepare."]};
+ const s=cmd.toLowerCase(); let kind="general",title="General task plan",steps=[];
+ if(/create.*complete video|complete video|cinematic production mode/.test(s)){kind="complete-video";title="Complete video production plan";steps=["Clarify goal, audience, duration and platform.","Select an approved character and map reference assets.","Draft script and frame-by-frame storyboard.","Prepare shot-specific prompts and continuity rules.","Mark generation as requiring a connected video provider.","Run realism, motion, product and audio QA after generation.","Prepare edit, captions, export settings and approval checklist."]}
+ else if(/animate.*image|image.to.video/.test(s)){kind="animate-image";title="Image-to-video plan";steps=["Identify the source image and intended motion.","Define camera movement, subject action and clip duration.","Preserve identity, scene, wardrobe and object continuity.","Generate only after a video provider is connected.","Review motion, face, hands, flicker and ending frame."]}
+ else if(/create.*image|generate.*image/.test(s)){kind="image";title="Image creation brief";steps=["Define subject, setting, composition and aspect ratio.","Apply character identity and human-realism rules if relevant.","Map product or environment reference assets.","Prepare prompt and negative constraints.","Generate only after an image provider is connected."]}
+ else if(/create a project called/.test(s)){const m=cmd.match(/create a project called\s+["“]?(.+?)["”]?\s*$/i);if(m){const name=m[1].replace(/^["“]|["”]$/g,"");state.projects.unshift({id:id(),name,type:"Other",notes:"Created from command",created:new Date().toISOString()});save();return {kind:"project",title:"Project record created",steps:[`Added "${name}" to local project records.`]}}}
+ else if(/help|what can you do/.test(s)){kind="help";title="Available prototype commands";steps=["Qelvyro, create the image.","Qelvyro, animate this image.","Qelvyro, create the complete video.","Qelvyro, create a project called [name].","Use Projects and Assets to create local records."]}
+ else {steps=["Summarize the goal and desired deliverable.","Identify which registered capabilities may be needed.","List required references, dependencies and approvals.","No external action is taken in prototype mode."]}
+ return {kind,title,steps};
+}
+function runCommand(raw,target){
+ const r=interpret(raw); if(r.kind==="empty"){target.innerHTML=`<div class="empty">${esc(r.title)}</div>`;return}
+ const job={id:id(),command:raw.trim(),kind:r.kind,title:r.title,steps:r.steps,status:"Simulated — not executed",created:new Date().toISOString()};
+ if(r.kind!=="project") state.jobs.unshift(job);
+ state.activity.unshift({id:id(),text:`Prepared: ${r.title}`,created:new Date().toISOString()});
+ state.activity=state.activity.slice(0,12);save();
+ target.innerHTML=`<div class="item"><div class="itemhead"><b>${esc(r.title)}</b><span class="pill">${esc(job.status)}</span></div><ol>${r.steps.map(x=>`<li>${esc(x)}</li>`).join("")}</ol><p><b>Boundary:</b> This is a plan only. No image/video was generated and no external service was called.</p></div>`;
+}
+document.getElementById("runQuick").onclick=()=>{const v=document.getElementById("quickCommand").value;go("command");document.getElementById("mainCommand").value=v;runCommand(v,document.getElementById("commandResult"))};
+document.querySelectorAll(".preset").forEach(b=>b.onclick=()=>{document.getElementById("quickCommand").value=b.dataset.cmd});
+document.getElementById("runMain").onclick=()=>runCommand(document.getElementById("mainCommand").value,document.getElementById("commandResult"));
+document.getElementById("clearCommand").onclick=()=>{document.getElementById("mainCommand").value="";document.getElementById("commandResult").innerHTML=""};
+document.getElementById("addProject").onclick=()=>{const name=document.getElementById("projectName").value.trim();if(!name){alert("Enter a project name.");return}state.projects.unshift({id:id(),name,type:document.getElementById("projectType").value,notes:document.getElementById("projectNotes").value.trim(),created:new Date().toISOString()});state.activity.unshift({id:id(),text:`Created project: ${name}`,created:new Date().toISOString()});document.getElementById("projectName").value="";document.getElementById("projectNotes").value="";save()};
+document.getElementById("addAsset").onclick=()=>{const name=document.getElementById("assetName").value.trim();if(!name){alert("Enter an asset name.");return}state.assets.unshift({id:id(),name,type:document.getElementById("assetType").value,location:document.getElementById("assetLocation").value.trim(),created:new Date().toISOString()});document.getElementById("assetName").value="";document.getElementById("assetLocation").value="";save()};
+function renderList(el,items,empty,format){el.innerHTML=items.length?items.map(format).join(""):`<div class="empty">${empty}</div>`}
+function renderAll(){
+ document.getElementById("statModules").textContent=modules.length;document.getElementById("statProjects").textContent=state.projects.length;document.getElementById("statAssets").textContent=state.assets.length;document.getElementById("statJobs").textContent=state.jobs.length;
+ renderList(document.getElementById("recentActivity"),state.activity.slice(0,5),"No activity yet.",x=>`<div class="item"><b>${esc(x.text)}</b><br><small>${new Date(x.created).toLocaleString()}</small></div>`);
+ renderList(document.getElementById("projectList"),state.projects,"No projects yet.",x=>`<div class="item"><div class="itemhead"><div><b>${esc(x.name)}</b><br><small>${esc(x.type)} · ${new Date(x.created).toLocaleDateString()}</small></div><button class="btn small" onclick="deleteRecord('projects','${x.id}')">Delete</button></div>${x.notes?`<p>${esc(x.notes)}</p>`:""}</div>`);
+ renderList(document.getElementById("assetList"),state.assets,"No assets registered yet.",x=>`<div class="item"><div class="itemhead"><div><b>${esc(x.name)}</b><br><small>${esc(x.type)}</small></div><button class="btn small" onclick="deleteRecord('assets','${x.id}')">Delete</button></div>${x.location?`<p>${esc(x.location)}</p>`:""}</div>`);
+ renderList(document.getElementById("moduleGrid"),modules.filter(x=>(x.name+" "+x.desc).toLowerCase().includes(document.getElementById("moduleSearch").value.toLowerCase())),"No matching modules.",x=>`<div class="module"><div class="ico">${x.icon}</div><h3>${esc(x.name)}</h3><p>${esc(x.desc)}</p><span class="pill">${esc(x.status)}</span></div>`);
+}
+window.deleteRecord=(group,key)=>{if(confirm("Delete this local record?")){state[group]=state[group].filter(x=>x.id!==key);save()}};
+document.getElementById("moduleSearch").addEventListener("input",renderAll);
+document.getElementById("exportData").onclick=()=>{const blob=new Blob([JSON.stringify({version:"0.3",exportedAt:new Date().toISOString(),state},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="qelvyro-os-backup.json";a.click();URL.revokeObjectURL(a.href);document.getElementById("dataMsg").textContent="Backup export requested."};
+document.getElementById("importFile").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!d.state||!Array.isArray(d.state.projects)||!Array.isArray(d.state.assets)||!Array.isArray(d.state.jobs))throw new Error("This does not look like a QELVYRO backup.");if(!confirm("Replace local records with the imported backup?"))return;state={...fresh(),...d.state};save();document.getElementById("dataMsg").textContent="Backup imported."; }catch(err){document.getElementById("dataMsg").textContent="Import failed: "+err.message}e.target.value=""};
+document.getElementById("resetData").onclick=()=>{if(confirm("Clear all QELVYRO prototype records in this browser? Export a backup first if needed.")){state=fresh();save();document.getElementById("dataMsg").textContent="Local records cleared."}};
+renderAll();
+</script>
+</body>
+</html>

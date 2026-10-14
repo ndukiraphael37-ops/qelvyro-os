@@ -1,0 +1,9 @@
+{
+  "name": "QELVYRO OS Independent Foundation",
+  "version": "0.3",
+  "kind": "portable-static-prototype",
+  "status": "prototype",
+  "live_ai_generation": false,
+  "cloud_backend": false,
+  "modules": 12
+}
